@@ -15,7 +15,7 @@ from utils.lama import inpaint_watermark
 import random
 
 
-app = Flask(__name__, template_folder='/content/templates')
+app = Flask(__name__, template_folder='/content/Zeroscope_v2_FlaskUI')
 app.secret_key = 'ewffwefwe'
 
 def initialize_pipeline(model, device="cuda", xformers=False, sdp=False):
