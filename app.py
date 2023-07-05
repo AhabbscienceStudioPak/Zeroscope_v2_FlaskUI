@@ -90,7 +90,7 @@ def inference(
 def index():
     if request.method == 'POST':
         # Retrieve the form data
-        model = "/content/zeroscope_v2_576w"
+        model = request.form.get('model')
         prompt = request.form.get('prompt')
         negative_prompt = request.form.get('negative_prompt')
         batch_size = int(request.form.get('batch_size', 1))
