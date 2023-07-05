@@ -16,7 +16,6 @@ import random
 
 
 app = Flask(__name__, template_folder='/content/Zeroscope_v2_FlaskUI/templates')
-app.secret_key = 'ewffwefwe'
 
 def initialize_pipeline(model, device="cuda", xformers=False, sdp=False):
     with warnings.catch_warnings():
@@ -156,20 +155,26 @@ def index():
 
             video = video.byte().cpu().numpy()
 
-            video_name = f"{out_stem} {str(uuid4())[:8]}.mp4"
-            export_to_video(video, video_name, fps)
-            session['latest_vid'] = video_name
+            export_to_video(video, f"{out_stem} {str(uuid4())[:8]}.mp4", fps)
 
         return render_template('video.html')
 
     return render_template('index.html')
 
 
-@app.route('/video', methods=['POST'])
+import os
+
+@app.route('/video', methods=['GET', 'POST'])
 def display_video():
-    video_name = session.get('latest_vid')
-    video_url = "/content/Text-To-Video-Finetuning/output/" + video_name  # Replace with the actual URL or path
-    return render_template('video.html', video_url=video_url)
+    video_dir = "/content/Text-To-Video-Finetuning/output/"
+    video_urls = []
+    
+    # Retrieve all video files from the output folder
+    for filename in os.listdir(video_dir):
+        if filename.endswith(".mp4"):
+            video_urls.append(video_dir + filename)
+    
+    return render_template('video.html', video_urls=video_urls)
 
 
 if __name__ == "__main__":
